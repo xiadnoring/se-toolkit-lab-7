@@ -111,7 +111,7 @@ services:
 
 ### Stop and remove all containers, volumes, and images
 
-1. To stop all running [services](#service), remove [containers](./docker.md#container), remove [volumes](#volume), and remove [images](./docker.md#image),
+1. To stop all running [services](#service) and remove [containers](./docker.md#container), [volumes](#volume), and [images](./docker.md#image),
 
    [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
 
