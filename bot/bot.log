@@ -1,0 +1,40 @@
+nohup: ignoring input
+2026-03-20 19:19:51,802 - __main__ - INFO - Bot started successfully
+2026-03-20 19:19:51,804 - aiogram.dispatcher - INFO - Start polling
+2026-03-20 19:19:52,221 - aiogram.dispatcher - INFO - Run polling for bot @lenars_son_bot id=6631371737 - 'lenars_son'
+2026-03-20 19:19:52,425 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,682 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,685 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,687 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,696 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,699 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,702 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,703 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,709 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,722 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,725 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,738 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,741 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:19:52,759 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:19:53,040 - aiogram.event - INFO - Update id=993903939 is handled. Duration 655 ms by bot id=6631371737
+2026-03-20 19:19:53,064 - aiogram.event - INFO - Update id=993903943 is handled. Duration 676 ms by bot id=6631371737
+2026-03-20 19:19:53,089 - aiogram.event - INFO - Update id=993903941 is handled. Duration 702 ms by bot id=6631371737
+2026-03-20 19:19:53,179 - aiogram.event - INFO - Update id=993903942 is handled. Duration 791 ms by bot id=6631371737
+2026-03-20 19:19:53,302 - aiogram.event - INFO - Update id=993903944 is handled. Duration 913 ms by bot id=6631371737
+2026-03-20 19:19:54,035 - aiogram.event - INFO - Update id=993903945 is handled. Duration 1646 ms by bot id=6631371737
+2026-03-20 19:19:54,080 - aiogram.event - INFO - Update id=993903940 is handled. Duration 1695 ms by bot id=6631371737
+2026-03-20 19:19:54,199 - aiogram.event - INFO - Update id=993903938 is handled. Duration 1889 ms by bot id=6631371737
+2026-03-20 19:19:54,232 - aiogram.event - INFO - Update id=993903946 is handled. Duration 1483 ms by bot id=6631371737
+2026-03-20 19:19:57,281 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:19:57,386 - aiogram.event - INFO - Update id=993903947 is handled. Duration 113 ms by bot id=6631371737
+2026-03-20 19:20:00,685 - aiogram.event - INFO - Update id=993903948 is handled. Duration 225 ms by bot id=6631371737
+2026-03-20 19:20:02,932 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:20:03,046 - aiogram.event - INFO - Update id=993903949 is handled. Duration 127 ms by bot id=6631371737
+2026-03-20 19:20:15,613 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-03-20 19:20:15,613 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6631371737)
+2026-03-20 19:20:26,698 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 6631371737)
+2026-03-20 19:23:07,584 - httpx - INFO - HTTP Request: GET http://localhost:42002/items/ "HTTP/1.1 200 OK"
+2026-03-20 19:23:07,692 - aiogram.event - INFO - Update id=993903950 is handled. Duration 119 ms by bot id=6631371737
+2026-03-20 19:23:12,005 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/scores?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:23:12,020 - httpx - INFO - HTTP Request: GET http://localhost:42002/analytics/groups?lab=lab-07 "HTTP/1.1 200 OK"
+2026-03-20 19:23:12,525 - aiogram.event - INFO - Update id=993903951 is handled. Duration 539 ms by bot id=6631371737
