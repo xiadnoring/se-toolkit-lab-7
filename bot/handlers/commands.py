@@ -84,6 +84,7 @@ async def handle_scores(user_input: str = "") -> str:
     groups = result.get("groups", 0)
 
     return (
+        f"Task\n"
         f"📊 Scores for {lab_id}:\n"
         f"👥 Total students: {total}\n"
         f"✅ Passed: {passed}\n"
