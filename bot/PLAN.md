@@ -45,17 +45,44 @@ Connected handlers to the LMS backend API. Added real data fetching to `/health`
 - `GET /items/` — Health check and lab listing
 - `GET /analytics/scores` — Score data (for future enhancement)
 
-### Task 3: Intent-Based Natural Language Routing (Planned)
+### Task 3: Intent-Based Natural Language Routing (Completed)
 
-Add LLM-powered intent routing so users can ask questions in plain text. The LLM decides which tool (API call) to invoke based on the user's query.
+Added LLM-powered intent routing so users can ask questions in plain text. The LLM decides which tool (API call) to invoke based on the user's query.
 
-**Approach:**
-- Define tool descriptions for each backend endpoint
-- Use the LLM to parse user intent and select tools
-- Chain multiple API calls when needed (e.g., "show my lab-04 scores and compare to group average")
-- Tool descriptions are more important than prompt engineering — clear descriptions help the LLM choose correctly
+**Implementation:**
+- Created `services/llm_client.py` with `LLMClient` and `IntentRouter` classes
+- Defined 9 tool schemas for all backend endpoints
+- Implemented tool calling loop: user message → LLM → tool execution → results back to LLM → final answer
+- Added inline keyboard buttons for common queries in `handlers/natural_language.py`
+- Updated `bot.py` to handle plain text messages and callback queries
 
-**Key pattern:** The LLM reads tool descriptions to decide which to call. If the LLM picks the wrong tool, improve the description — don't route around it with regex.
+**Key patterns:**
+- **Tool descriptions > prompt engineering** — Clear tool descriptions help the LLM choose correctly
+- **No regex routing** — The LLM decides which tool to call based on tool descriptions
+- **Tool calling loop** — Results are fed back to the LLM for multi-step reasoning
+- **Separation of concerns** — LLM client handles chat, API client handles backend, router orchestrates
+
+**Tool schemas defined:**
+1. `get_items` — List all labs and tasks
+2. `get_learners` — List enrolled students and groups
+3. `get_scores` — Score distribution for a lab
+4. `get_pass_rates` — Per-task pass rates for a lab
+5. `get_timeline` — Submission timeline for a lab
+6. `get_groups` — Per-group scores and student counts
+7. `get_top_learners` — Top N learners by score
+8. `get_completion_rate` — Completion rate percentage
+9. `trigger_sync` — Refresh data from autochecker
+
+**Inline keyboard buttons:**
+- 8 action buttons (labs, scores, top students, groups, pass rates, completion, learners, sync)
+- 3 quick query buttons (what labs, lowest pass rate, best group)
+
+**Files modified/created:**
+- `services/llm_client.py` — LLM client and intent router (new)
+- `services/api_client.py` — Added 9 new API methods for tools
+- `handlers/natural_language.py` — Natural language handler and keyboard buttons (new)
+- `handlers/__init__.py` — Exported new handlers
+- `bot.py` — Added plain text message handling and inline keyboard support
 
 ### Task 4: Containerize and Document (Planned)
 
@@ -91,17 +118,19 @@ bot/
 ├── .env.bot.secret     # Configuration (gitignored)
 ├── handlers/
 │   ├── __init__.py
-│   └── commands.py     # Command handlers
+│   ├── commands.py         # Command handlers (/start, /help, etc.)
+│   └── natural_language.py # LLM intent router and inline keyboards
 └── services/
     ├── __init__.py
-    └── api_client.py   # LMS API client
+    ├── api_client.py       # LMS API client
+    └── llm_client.py       # LLM client with tool calling
 ```
 
 ## Next Steps
 
 1. ✅ Task 1: Verify acceptance criteria
 2. ✅ Task 2: Backend integration complete
-3. ⏳ Task 3: Implement LLM intent routing
+3. ✅ Task 3: LLM intent routing complete
 4. ⏳ Task 4: Containerize and deploy
 
 ## Git Workflow

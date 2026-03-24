@@ -7,8 +7,14 @@ import httpx
 
 # Clear proxy environment variables at module load to avoid httpx issues
 _PROXY_VARS = [
-    "HTTP_PROXY", "HTTPS_PROXY", "FTP_PROXY", "ALL_PROXY",
-    "http_proxy", "https_proxy", "ftp_proxy", "all_proxy",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "FTP_PROXY",
+    "ALL_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "ftp_proxy",
+    "all_proxy",
 ]
 _old_proxy_values = {}
 for var in _PROXY_VARS:
@@ -47,7 +53,10 @@ class LMSAPIClient:
             response = await self._client.get("/items/")
             response.raise_for_status()
             items = response.json()
-            return {"status": "ok", "message": f"Backend is healthy. {len(items)} items available."}
+            return {
+                "status": "ok",
+                "message": f"Backend is healthy. {len(items)} items available.",
+            }
         except httpx.HTTPError as e:
             return {"status": "error", "message": str(e)}
         except Exception as e:
@@ -113,13 +122,15 @@ class LMSAPIClient:
             scores = response.json()
 
             # Get group stats
-            groups_response = await self._client.get(f"/analytics/groups?lab=lab-{lab_id:02d}")
+            groups_response = await self._client.get(
+                f"/analytics/groups?lab=lab-{lab_id:02d}"
+            )
             groups_response.raise_for_status()
             groups = groups_response.json()
 
             # Calculate totals from score buckets
             total_students = sum(bucket["count"] for bucket in scores)
-            
+
             # Calculate average score (weighted by bucket midpoints)
             bucket_midpoints = {"0-25": 12.5, "26-50": 38, "51-75": 63, "76-100": 88}
             weighted_sum = sum(
@@ -129,7 +140,11 @@ class LMSAPIClient:
             avg_score = weighted_sum / total_students if total_students > 0 else 0
 
             # Count students who passed (score >= 51)
-            passed = sum(bucket["count"] for bucket in scores if bucket["bucket"] in ["51-75", "76-100"])
+            passed = sum(
+                bucket["count"]
+                for bucket in scores
+                if bucket["bucket"] in ["51-75", "76-100"]
+            )
             pass_rate = (passed / total_students * 100) if total_students > 0 else 0
 
             return {
@@ -154,3 +169,161 @@ class LMSAPIClient:
     async def close(self) -> None:
         """Close the HTTP client."""
         await self._client.aclose()
+
+    # Additional methods for LLM tool calling
+
+    async def get_labs_raw(self) -> list[dict]:
+        """Get raw list of all items (labs and tasks).
+
+        Returns:
+            List of all items from the backend.
+        """
+        try:
+            response = await self._client.get("/items/")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_learners(self) -> list[dict]:
+        """Get list of all enrolled learners.
+
+        Returns:
+            List of learner objects.
+        """
+        try:
+            response = await self._client.get("/learners/")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_scores_distribution(self, lab: str) -> list[dict]:
+        """Get score distribution for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+
+        Returns:
+            List of score bucket objects.
+        """
+        try:
+            response = await self._client.get(f"/analytics/scores?lab={lab}")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_pass_rates(self, lab: str) -> list[dict]:
+        """Get pass rates for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+
+        Returns:
+            List of pass rate objects per task.
+        """
+        try:
+            response = await self._client.get(f"/analytics/pass-rates?lab={lab}")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_timeline(self, lab: str) -> list[dict]:
+        """Get submission timeline for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+
+        Returns:
+            List of timeline objects.
+        """
+        try:
+            response = await self._client.get(f"/analytics/timeline?lab={lab}")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_groups(self, lab: str) -> list[dict]:
+        """Get group stats for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+
+        Returns:
+            List of group stat objects.
+        """
+        try:
+            response = await self._client.get(f"/analytics/groups?lab={lab}")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_top_learners(self, lab: str, limit: int = 10) -> list[dict]:
+        """Get top learners for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+            limit: Number of learners to return
+
+        Returns:
+            List of top learner objects.
+        """
+        try:
+            response = await self._client.get(
+                f"/analytics/top-learners?lab={lab}&limit={limit}"
+            )
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return []
+        except Exception:
+            return []
+
+    async def get_completion_rate(self, lab: str) -> dict:
+        """Get completion rate for a lab.
+
+        Args:
+            lab: Lab identifier (e.g., 'lab-01')
+
+        Returns:
+            Completion rate object.
+        """
+        try:
+            response = await self._client.get(f"/analytics/completion-rate?lab={lab}")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError:
+            return {}
+        except Exception:
+            return {}
+
+    async def trigger_sync(self) -> dict:
+        """Trigger a data sync from autochecker.
+
+        Returns:
+            Sync result object.
+        """
+        try:
+            response = await self._client.post("/pipeline/sync")
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPError as e:
+            return {"error": str(e)}
+        except Exception as e:
+            return {"error": str(e)}
