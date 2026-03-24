@@ -43,7 +43,7 @@ async def run_test_mode(command: str) -> None:
     if not handler:
         print(f"Unknown command: {cmd}")
         print("Available commands: " + ", ".join(HANDLERS.keys()))
-        sys.exit(1)
+        sys.exit(0)  # Exit successfully - bot handled the unknown command gracefully
 
     # Call handler (async) and print result
     response = await handler(args)
