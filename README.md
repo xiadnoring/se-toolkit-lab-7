@@ -91,3 +91,113 @@ By the end of this lab, you should be able to say:
 2. [Backend Integration](./lab/tasks/required/task-2.md) — P0: slash commands + real data
 3. [Intent-Based Natural Language Routing](./lab/tasks/required/task-3.md) — P1: LLM tool use
 4. [Containerize and Document](./lab/tasks/required/task-4.md) — P3: containerize + deploy
+
+## Deploy
+
+This section documents how to deploy the Telegram bot alongside the LMS backend using Docker Compose.
+
+### Prerequisites
+
+- Docker and Docker Compose installed on the VM
+- Backend already running (from previous tasks)
+- Telegram bot token from @BotFather
+- LLM API credentials (Qwen Code API)
+
+### Environment variables
+
+Create `.env.docker.secret` in the project root with the following variables:
+
+```bash
+# Telegram bot token (from @BotFather)
+BOT_TOKEN=your-telegram-bot-token-here
+
+# LMS API
+LMS_API_KEY=my-secret-api-key
+
+# LLM API
+LLM_API_KEY=your-qwen-api-key
+LLM_API_BASE_URL=http://10.91.49.208:42005/v1
+LLM_API_MODEL=coder-model
+```
+
+The bot service in `docker-compose.yml` uses these environment variables:
+- `BOT_TOKEN` — Telegram bot authentication
+- `LMS_API_URL` — Internal network URL to backend (`http://backend:8000`)
+- `LMS_API_KEY` — Backend API authentication
+- `LLM_API_KEY`, `LLM_API_BASE_URL`, `LLM_API_MODEL` — LLM configuration
+
+### Build and deploy
+
+1. **Pull latest code** (if deploying from GitHub):
+   ```bash
+   cd ~/se-toolkit-lab-7
+   git pull
+   ```
+
+2. **Build and start the bot**:
+   ```bash
+   cd ~/se-toolkit-lab-7
+   docker compose --env-file .env.docker.secret up --build -d bot
+   ```
+
+3. **Verify the bot is running**:
+   ```bash
+   docker compose ps bot
+   docker compose logs bot
+   ```
+
+   You should see:
+   ```
+   NAME                STATUS
+   se-toolkit-lab-7-bot-1   Up (healthy)
+   ```
+
+4. **Verify backend is still healthy**:
+   ```bash
+   curl -sf http://localhost:42002/items/ -H "Authorization: Bearer my-secret-api-key" | head -c 100
+   ```
+
+### Test in Telegram
+
+1. Open your bot in Telegram
+2. Send `/start` — should receive welcome message with inline keyboard
+3. Send `/help` — should see available commands with quick query buttons
+4. Send `/health` — should see backend status
+5. Send `/labs` — should list available labs
+6. Send plain text: "what labs are available" — should return real data from backend
+7. Click inline keyboard buttons — should trigger predefined queries
+
+### Troubleshooting
+
+**Bot not starting:**
+```bash
+docker compose logs bot
+```
+
+Check for:
+- Missing environment variables
+- Invalid BOT_TOKEN
+- LLM API connection errors
+
+**Backend unreachable from bot:**
+The bot uses `http://backend:8000` (Docker network service name), not `localhost`. Verify the bot service is on the `lms-network`.
+
+**LLM returns 500 errors:**
+The Qwen Code API proxy needs valid OAuth credentials. Restart the proxy:
+```bash
+cd ~/qwen-code-oai-proxy && docker compose restart
+```
+
+### Stop and remove
+
+```bash
+# Stop the bot
+docker compose stop bot
+
+# Remove the bot container
+docker compose rm -f bot
+
+# Rebuild from scratch
+docker compose down bot
+docker compose up --build -d bot
+```
